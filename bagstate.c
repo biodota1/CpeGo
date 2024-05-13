@@ -1,5 +1,6 @@
 #include<stdio.h>
 #include<stdbool.h>
+#include<string.h>
 #include "bagstate.h"
 #include "state.h"
 #include "utils.h"
@@ -12,7 +13,7 @@ extern Bag *Inventory;
 extern int _currentBag;
 extern int _item;
 extern int *_noOfItems;
-extern int *_selectedItem;
+int _selectedItem;
 extern int _currentBag;
 extern bool _isBag;
 extern bool _actionComplete;
@@ -68,7 +69,7 @@ void BagUpdateState(){
 				_isBag = false;
 				_actionComplete = true;
 				_isRootState = true;
-				*_selectedItem=1;
+				_selectedItem=1;
 			}
 			break;
 		}
@@ -77,7 +78,7 @@ void BagUpdateState(){
 				_isBag = false;
 				_actionComplete = true;
 				_isRootState = true;
-				*_selectedItem=2;
+				_selectedItem=2;
 			}
 			break;
 		}
@@ -86,7 +87,7 @@ void BagUpdateState(){
 				_isBag = false;
 				_actionComplete = true;
 				_isRootState = true;
-				*_selectedItem=3;
+				_selectedItem=3;
 			}
 			break;
 		}
@@ -95,7 +96,7 @@ void BagUpdateState(){
 				_isBag = false;
 				_actionComplete = true;
 				_isRootState = true;
-				*_selectedItem=4;
+				_selectedItem=4;
 			}
 			break;
 		}
@@ -104,7 +105,7 @@ void BagUpdateState(){
 				_isBag = false;
 				_actionComplete = true;
 				_isRootState = true;
-				*_selectedItem=5;
+				_selectedItem=5;
 			}
 			break;
 		}
@@ -113,7 +114,7 @@ void BagUpdateState(){
 				_isBag = false;
 				_actionComplete = true;
 				_isRootState = true;
-				*_selectedItem=6;
+				_selectedItem=6;
 			}
 			break;
 		}
@@ -122,7 +123,7 @@ void BagUpdateState(){
 				_isBag = false;
 				_actionComplete = true;
 				_isRootState = true;
-				*_selectedItem=7;
+				_selectedItem=7;
 			}
 			break;
 		}
@@ -131,7 +132,7 @@ void BagUpdateState(){
 				_isBag = false;
 				_actionComplete = true;
 				_isRootState = true;
-				*_selectedItem=8;
+				_selectedItem=8;
 			}
 			break;
 		}
@@ -140,7 +141,7 @@ void BagUpdateState(){
 				_isBag = false;
 				_actionComplete = true;
 				_isRootState = true;
-				*_selectedItem=9;
+				_selectedItem=9;
 			}
 			break;
 		}
@@ -168,7 +169,7 @@ void BagExitState(){
 	char used[] = {"   used"};
 	strcat(text1, currentPlayer->name);
 	strcat(text1, used);
-	strcat(text2, Inventory[_currentBag].item[*_selectedItem-1].name);
+	strcat(text2, Inventory[_currentBag].item[_selectedItem-1].name);
 	clearScreen();
 	BattleScene();
 	dialogBox(text1, text2);

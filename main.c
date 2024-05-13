@@ -52,55 +52,51 @@ void SwitchStates(State *currentState, State newState);
 extern void BattleEnterState();
 
 int main() {
-	int i;
-	
-	hideCursor();
-	
-	Player player = newGame();
-	currentPlayer = &player;
-	_playerHp = currentPlayer->hp;
-	_playerHpMultiple = _playerHp/20;
-	_playerCurrentHp = _playerHp;
-	currentPlayer->move = (Move*) realloc(currentPlayer->move, sizeof(Move)*2);
-	currentPlayer->move[1] = getMove(1);
-	currentPlayer->noOfMove++;
-	currentPlayer->move = (Move*) realloc(currentPlayer->move, sizeof(Move)*3);
-	currentPlayer->move[2] = getMove(2);
-	currentPlayer->noOfMove++;
-	currentPlayer->move = (Move*) realloc(currentPlayer->move, sizeof(Move)*4);
-	currentPlayer->move[3] = getMove(4);
-	currentPlayer->noOfMove++;
-	
-	currentSubject = &player.subject[0];
-
-	Npc npc1 = spawnNpc(0);
-	currentNpc = &npc1;
-	_npcHp = currentNpc->hp;
-	_npcHpMultiple = _npcHp/20;
-	_npcCurrentHp = _npcHp;
-	
-	
-	Bag *bag = (Bag*) calloc(3, sizeof(Bag));
-	for(i=0;i<3;i++){
-		bag[i].item = (Item*) calloc(9, sizeof(Item));
-	}
-	addItem(&bag[0], getItem(0));
-	addItem(&bag[0], getItem(0));
-	addItem(&bag[1], getItem(1));
-	addItem(&bag[1], getItem(1));
-	addItem(&bag[2], getItem(1));
-	addItem(&bag[2], getItem(2));
-	addItem(&bag[2], getItem(3));
-	
-	Inventory = bag;
-	
-//	int selectedItem = 0;
-//	*_selectedItem = &selectedItem;
-	
-	
+//	int i;
+//	
+//	hideCursor();
+//	
+//	Player player = newGame();
+//	currentPlayer = &player;
+//	_playerHp = currentPlayer->hp;
+//	_playerHpMultiple = _playerHp/20;
+//	_playerCurrentHp = _playerHp;
+//	currentPlayer->move = (Move*) realloc(currentPlayer->move, sizeof(Move)*2);
+//	currentPlayer->move[1] = getMove(1);
+//	currentPlayer->noOfMove++;
+//	currentPlayer->move = (Move*) realloc(currentPlayer->move, sizeof(Move)*3);
+//	currentPlayer->move[2] = getMove(2);
+//	currentPlayer->noOfMove++;
+//	currentPlayer->move = (Move*) realloc(currentPlayer->move, sizeof(Move)*4);
+//	currentPlayer->move[3] = getMove(4);
+//	currentPlayer->noOfMove++;
+//	
+//	currentSubject = &player.subject[0];
+//
+//	Npc npc1 = spawnNpc(0);
+//	currentNpc = &npc1;
+//	_npcHp = currentNpc->hp;
+//	_npcHpMultiple = _npcHp/20;
+//	_npcCurrentHp = _npcHp;
+//	
+//	
+//	Bag *bag = (Bag*) calloc(3, sizeof(Bag));
+//	for(i=0;i<3;i++){
+//		bag[i].item = (Item*) calloc(9, sizeof(Item));
+//	}
+//	addItem(&bag[0], getItem(0));
+//	addItem(&bag[0], getItem(0));
+//	addItem(&bag[1], getItem(1));
+//	addItem(&bag[1], getItem(1));
+//	addItem(&bag[2], getItem(1));
+//	addItem(&bag[2], getItem(2));
+//	addItem(&bag[2], getItem(3));
+//	
+//	Inventory = bag;
+//	
 //	introduction();
-	_isBattling = true;
-	currentRootState = BattleState;
+	_isExploring = true;
+	currentRootState = ExploreState;
 	while(1){
 		if(_isRootState){
 			currentRootState.updateState();
@@ -108,8 +104,7 @@ int main() {
 		}else{
 			currentSubState.updateState();
 			CheckSwitchStates();
-		}
-		
+		}	
 	}
 	
 	free(currentPlayer->move);
@@ -137,7 +132,7 @@ void CheckSwitchStates(){
 	if(_isExploring){
 		SwitchState(&currentRootState, &currentSubState, ExploreState);
 	}
-	if(_isBattling && !_isFighting && !_isBag){
+	if(_isBattling && !_isFighting && !_isBag && !_isStudying){
 		SwitchState(&currentRootState, &currentSubState, BattleState);
 	}
 	if(_isBattling && _isFighting){

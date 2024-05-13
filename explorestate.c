@@ -315,10 +315,10 @@ loop:
 	}else{
 		goto loop;
 	}
-    return 0;
-}
-
 
 }
+void ExitExploreState(){
+	
+}
 
-State ExploreState = {EnterExploreState};
+State ExploreState = {EnterExploreState, UpdateExploreState,ExitExploreState};
