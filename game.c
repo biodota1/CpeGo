@@ -3,7 +3,6 @@
 #include<stdio.h>
 #include<conio.h>
 #include<string.h>
-
 #include "game.h"
 #include "utils.h"
 
@@ -148,7 +147,43 @@ Player newGame(){
 }
 Npc spawnNpc(int select){
 	if(select==0){
+		Npc npc = {"Manong Guard", 1, 20, 20, 20, 100, 20, 10, 2};
+		npc.move = (Move*) calloc(npc.noOfMove,sizeof(Move));
+		npc.move[0] = getMove(0);
+		npc.move[1] = getMove(1);
+		npc.subject = (Subject*) malloc(sizeof(Subject));
+		npc.subject[0] = getSubject(5);
+		return npc;
+	}
+	if(select==1){
 		Npc npc = {"Engr. Jundith Alterado", 3, 30, 30, 30, 150, 20, 10, 2};
+		npc.move = (Move*) calloc(npc.noOfMove,sizeof(Move));
+		npc.move[0] = getMove(0);
+		npc.move[1] = getMove(1);
+		npc.subject = (Subject*) malloc(sizeof(Subject));
+		npc.subject[0] = getSubject(5);
+		return npc;
+	}
+	if(select==2){
+		Npc npc = {"Engr. Jovelyn B. Buhawe", 5, 30, 30, 30, 150, 20, 10, 2};
+		npc.move = (Move*) calloc(npc.noOfMove,sizeof(Move));
+		npc.move[0] = getMove(0);
+		npc.move[1] = getMove(1);
+		npc.subject = (Subject*) malloc(sizeof(Subject));
+		npc.subject[0] = getSubject(5);
+		return npc;
+	}
+	if(select==3){
+		Npc npc = {"Engr. Jovelyn B. Buhawe", 5, 30, 30, 30, 150, 20, 10, 2};
+		npc.move = (Move*) calloc(npc.noOfMove,sizeof(Move));
+		npc.move[0] = getMove(0);
+		npc.move[1] = getMove(1);
+		npc.subject = (Subject*) malloc(sizeof(Subject));
+		npc.subject[0] = getSubject(5);
+		return npc;
+	}
+	if(select==4){
+		Npc npc = {"Engr. Julian P. Semblante ", 5, 30, 30, 30, 150, 20, 10, 2};
 		npc.move = (Move*) calloc(npc.noOfMove,sizeof(Move));
 		npc.move[0] = getMove(0);
 		npc.move[1] = getMove(1);

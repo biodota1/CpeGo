@@ -13,12 +13,11 @@ extern Bag *Inventory;
 extern int _currentBag;
 extern int _item;
 extern int *_noOfItems;
-int _selectedItem;
 extern int _currentBag;
 extern bool _isBag;
 extern bool _actionComplete;
 
-
+int _selectedItem;
 
 void BagDisplay(){
 	int i,j;

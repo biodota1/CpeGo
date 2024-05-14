@@ -4,8 +4,8 @@
 CPP      = g++.exe
 CC       = gcc.exe
 WINDRES  = windres.exe
-OBJ      = bagstate.o battlestate.o explorestate.o fightstate.o game.o main.o map.o studystate.o utils.o
-LINKOBJ  = bagstate.o battlestate.o explorestate.o fightstate.o game.o main.o map.o studystate.o utils.o
+OBJ      = bagstate.o battlestate.o explorestate.o fightstate.o game.o main.o map.o studystate.o utils.o event.o
+LINKOBJ  = bagstate.o battlestate.o explorestate.o fightstate.o game.o main.o map.o studystate.o utils.o event.o
 LIBS     = -L"C:/Program Files (x86)/Dev-Cpp/MinGW64/lib" -L"C:/Program Files (x86)/Dev-Cpp/MinGW64/x86_64-w64-mingw32/lib" -static-libgcc
 INCS     = -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/include" -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/x86_64-w64-mingw32/include" -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/lib/gcc/x86_64-w64-mingw32/4.9.2/include"
 CXXINCS  = -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/include" -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/x86_64-w64-mingw32/include" -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/lib/gcc/x86_64-w64-mingw32/4.9.2/include" -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/lib/gcc/x86_64-w64-mingw32/4.9.2/include/c++"
@@ -50,3 +50,6 @@ studystate.o: studystate.c
 
 utils.o: utils.c
 	$(CC) -c utils.c -o utils.o $(CFLAGS)
+
+event.o: event.c
+	$(CC) -c event.c -o event.o $(CFLAGS)

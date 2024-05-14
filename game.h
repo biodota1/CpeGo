@@ -1,5 +1,8 @@
+#include<stdbool.h>
+
 #ifndef GAME_H
 #define GAME_H
+
 
 
 typedef struct Item{
@@ -58,9 +61,22 @@ typedef struct Player{
 	Item *item;
 }Player;
 
+typedef struct Event{
+	Npc *npc;
+	int coordTriggerX;
+	int coordTriggerY;
+	bool isImportant;
+	void (*initEvent)();
+	struct Event *next;
+}Event;
+
 Player newGame();
 Npc spawnNpc(int select);
 Move getMove(int select);
+Item getItem(int select);
+Subject getSubject(int select);
+void addItem(Bag *bag, Item item);
+bool isItemExist(int item, int noOfItem);
 void Introduction();
 float matchUp(char *effect, char attackerSubject[],char defenderSubject[]);
 float studyUp(char moveSubject[], Subject currentSubject);

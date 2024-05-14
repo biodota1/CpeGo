@@ -50,9 +50,7 @@ void FightDisplay(){
 		strcat(text2, " ");
 	}
 	strcat(text2, currentPlayer->move[3].name);
-	
 
-	
 	BattleScene();
 	selectionBox(text1, text2);
 }

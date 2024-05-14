@@ -11,6 +11,7 @@
 #include "state.h"
 #include "game.h"
 #include "utils.h"
+#include "event.h"
 
 extern bool _isBattling;
 extern bool _isExploring;
@@ -20,8 +21,9 @@ extern bool _isBag;
 extern bool _isStudying;
 extern bool _isAbsent;
 extern bool _isIntro;
-extern Player *currentPlayer;
-extern Npc *currentNpc;
+extern bool _isImportantEvent;
+extern bool _isEventCompleted;
+
 extern float _playerHp;
 extern float _playerCurrentHp;
 extern float _playerHpMultiple;
@@ -29,6 +31,11 @@ extern float _npcHp;
 extern float _npcCurrentHp;
 extern float _npcHpMultiple;
 
+extern Player *currentPlayer;
+extern Npc *currentNpc;
+extern Event *currentEvent;
+
+bool _isWin = false;
 
 void BattleScene(){
 	
@@ -90,6 +97,7 @@ void BattleScene(){
 	
 	printf("\n");
 }
+
 void BattleDisplay(){	
 	char text3[] = {"What will                        [1] FIGHT  [2] BAG"};
 	char text4[] = {"you do?                          [3] STUDY  [4] ABSENT"};
@@ -97,16 +105,20 @@ void BattleDisplay(){
 	BattleScene();
 	selectionBox(text3, text4);
 }
+void BattleAbsent(){
+	clearScreen();
+	BattleScene();
+	char text1[] = {"You can't run away"};
+	char text2[] = {"from your responsibilities."};
+	dialogBox(text1, text2);
+}
 void BattleEnterState(){
-	printf("print");
 	if(!_isIntro){
-		clearScreen();
-		
 		printf("\n\n\n\n\n\n\n\n\n\n\n");
 		char text1[50];
 		char text2[50] = {"approaching..."};
-		strcpy(text1, "janine");
-		strcat(text1, "is");
+		strcpy(text1, currentNpc->name);
+		strcat(text1, " is");
 		dialogBox(text1, text2);
 		sleep(2);
 	}
@@ -132,42 +144,56 @@ void BattleUpdateState(){
 			break;
 		}
 		if(select=='4'){
-			_isBattling = false;
-			_isExploring = true;
-			_isAbsent = true;
-			break;
+			if(_isImportantEvent){
+				BattleAbsent();
+			}else{
+				_isBattling = false;
+				_isExploring = true;
+				_isWin = true;
+				_isRootState = true;
+				break;
+			}
+			
 		}
 	}	
 }
 void BattleExitState(){
 	_isIntro=false;
-	char text1[] = {"It's time"};
-	char text2[] = {"to absent."};
+	char text1[50];
+	char text2[] = {"You have gained "};
 	char text3[] = {""};
-	char text4[] = {" has been"};
-	char text5[] = {"defeated."};
-	char text6[] = {"You have gained "};
-	char text7[] = {""};
-	char text8[] = {"and acquired "};
-	char text9[] = {""}; 
-	sprintf(text7, "%d exp", 15);
-	sprintf(text9, "%d talent points", 20);
-	strcat(text3,"janine");
-	strcat(text3, text4);
-	strcat(text6,text7);
-	strcat(text8, text9);
+	char text4[] = {"and acquired "};
+	char text5[] = {""}; 
+	char name[] = {""};
+////	sprintf(text7, "%d exp", currentNpc->exp);
+////	sprintf(text9, "%d talent points", currentNpc->talent);
+	strcat(text1, currentNpc->name);
+	strcat(text1, " has been");
+//	strcat(text6,text7);
+//	strcat(text8, text9);
 	clearScreen();
 	BattleScene();
-	if(_isAbsent){
-		dialogBox(text1, text2);
-		_isAbsent = false;
-	}else{
-		dialogBox("Player has been", text5);
+//	if(_isAbsent){		
+//		_isAbsent = false;
+//		dialogBox("It's time", "to absent.");
+//		sleep(1);
+//	}
+	if(_isWin){
+		_isWin = false;
+		_isEventCompleted =true;
+		currentEvent=currentEvent->next;
+		dialogBox(text1, "defeated.");
 		sleep(1);
 		clearScreen();
 		BattleScene();
-		dialogBox(text6, text8);
+		dialogBox(text2, text4);
 	}
+	//else{
+//		clearScreen();
+//		BattleScene();
+//		dialogBox("Player has been", "whited out...");
+//		sleep(1);
+//	}
 }
 
 State BattleState = {BattleEnterState, BattleUpdateState, BattleExitState};

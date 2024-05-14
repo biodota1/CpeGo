@@ -4,9 +4,16 @@
 #include <windows.h>
 #include <string.h>
 #include <stdlib.h>
+#include <stdbool.h>
 
 extern char mapLines[40][220];
 extern void copyLines();
+extern int _currentTriggerY;
+extern int _currentTriggerX;
+extern bool _isBattling;
+extern bool _isExploring;
+extern int x;
+extern int y;
 
 void character(int anim){
 	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -33,6 +40,7 @@ void character(int anim){
 
 void EnterExploreState(){
 	printf("Enter Explore");
+	sleep(2);
 }
 void UpdateExploreState(){
 	copyLines();
@@ -48,7 +56,7 @@ void UpdateExploreState(){
     HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 	COORD mapCoord = { 0, 0};
 
-	int x=0,y=0;
+
 	int anim =0;
 	char display01[100];
 	char display02[100];
@@ -112,7 +120,7 @@ void UpdateExploreState(){
 	display30[99] - '\0';
 
 	
-loop:
+	while(1){
 	mapCoord.X = 0;
 	mapCoord.Y = 0;
 	memcpy(display01, mapLines[currentCoordY+y] + x + currentCoordX, 99);
@@ -240,7 +248,15 @@ loop:
 	character(anim);
 	
 	
+	
+	if(_currentTriggerY==y && _currentTriggerX==x){
+		_isBattling = true;
+		_isExploring = false;
+		break;
+	}
+	
 	char keyInput = getch();
+	
 	
 	if(keyInput=='w')
 	{
@@ -259,7 +275,7 @@ loop:
 				anim=0;
 			}
 		}
-		goto loop;
+		
 	}else if(keyInput=='d')
 	{
 		if(x<currentLimitPosX){
@@ -277,7 +293,7 @@ loop:
 				anim=0;
 			}
 		}
-		goto loop;
+		
 	}else if(keyInput=='s'){
 		if(y<currentLimitPosY){
 			y++;
@@ -294,7 +310,7 @@ loop:
 				anim=0;
 			}
 		}
-		goto loop;
+		
 	}else if(keyInput=='a'){
 		if(x>currentLimitNegX){
 			x--;
@@ -311,10 +327,10 @@ loop:
 				anim=0;
 			}
 		}
-		goto loop;
-	}else{
-		goto loop;
+		
 	}
+	}
+	
 
 }
 void ExitExploreState(){
