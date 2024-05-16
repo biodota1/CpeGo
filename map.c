@@ -110,17 +110,17 @@
    char mapLine104[] = {"                                      8                                                                      |           8|        |         |                                            8                                                     "};
    char mapLine105[] = {"                                      88888888888888888888888888888888888888888888888888888888888888888888888888      8888|        |         |888888888888888888888888888888888888888888888                                                     "};
    char mapLine106[] = {"                                      88888888888888888888888888888888888888888888888888888888888888888888888888      8888|        |         |888888888888888888888888888888888888888888888                                                     "};
-   char mapLine107[] = {"                                                                                                                                                                                                                                              "};
-   char mapLine108[] = {"                                                                                                                                                                                                                                              "};
-   char mapLine109[] = {"                                                                                                                                                                                                                                              "};
-   char mapLine110[] = {"                                                                                                                                                                                                                                              "};
-   char mapLine111[] = {"                                                                                                                                                                                                                                              "};
-   char mapLine112[] = {"                                                                                                                                                                                                                                              "};
-   char mapLine113[] = {"                                                                                                                                                                                                                                              "};
-   char mapLine114[] = {"                                                                                                                                                                                                                                              "};
-   char mapLine115[] = {"                                                                                                                                                                                                                                              "};
-
-char mapLines[114][220];
+   char mapLine107[] = {"                                                                                                                                                                                                                                                "};
+   char mapLine108[] = {"                                                                                                                                                                                                                                                "};
+   char mapLine109[] = {"                                                                                                                                                                                                                                                "};
+   char mapLine110[] = {"                                                                                                                                                                                                                                                "};
+   char mapLine111[] = {"                                                                                                                                                                                                                                                "};
+   char mapLine112[] = {"                                                                                                                                                                                                                                                "};
+   char mapLine113[] = {"                                                                                                                                                                                                                                                "};
+   char mapLine114[] = {"                                                                                                                                                                                                                                                "};
+   char mapLine115[] = {"                                                                                                                                                                                                                                                "};
+   char mapLine116[] = {"                                                                                                                                                                                                                                                "};
+char mapLines[116][220];
 void copyLines(){
 	
 strcpy(mapLines[0], mapLine00);
@@ -239,6 +239,7 @@ strcpy(mapLines[112], mapLine112);
 strcpy(mapLines[113], mapLine113);
 strcpy(mapLines[114], mapLine114);
 strcpy(mapLines[115], mapLine115);
+strcpy(mapLines[116], mapLine116);
 }
 
 

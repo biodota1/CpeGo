@@ -20,6 +20,9 @@ void initEvent(Event **event){
 	_currentTriggerY = (*event)->coordTriggerY;
 	_currentTriggerX = (*event)->coordTriggerX;
 	_isImportantEvent = (*event)->isImportant;
+	_npcHp = currentNpc->hp;
+	_npcHpMultiple = _npcHp/20;
+	_npcCurrentHp = _npcHp;
 }
 
 Event *createEvent(int x, int y, bool important, Npc *npc){
@@ -44,7 +47,7 @@ void getEvents(Event **currentEvent){
 	*npc3 = spawnNpc(2);
 	*npc4 = spawnNpc(3);
 	*npc5 = spawnNpc(4);
-	Event *event1 = createEvent(0,0,false,npc1);
+	Event *event1 = createEvent(0,-10,false,npc1);
 	Event *event2 = createEvent(0,-2,false,npc2);
 	Event *event3 = createEvent(0,-20,false,npc3);
 	Event *event4 = createEvent(0,-30,false,npc4);

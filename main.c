@@ -27,8 +27,11 @@ bool _isBag       = false;
 bool _isAbsent    = false;
 bool _actionComplete = false;
 bool _isIntro     = false;
+bool _isExitState = false;
 bool _isImportantEvent = false;
 bool _isEventCompleted = false;
+bool _isWin = false;
+bool _isLose = false;
 
 float _playerHp;
 float _playerHpMultiple;
@@ -69,7 +72,7 @@ int main() {
 	_playerHpMultiple = _playerHp/20;
 	_playerCurrentHp = _playerHp;
 
-//	//BAG SETTING
+	//BAG SETTING
 	Bag *bag = (Bag*) calloc(3, sizeof(Bag));
 	for(i=0;i<3;i++){
 		bag[i].item = (Item*) calloc(9, sizeof(Item));
@@ -88,9 +91,6 @@ int main() {
 	currentRootState = ExploreState;
 	getEvents(&currentEvent);
 	initEvent(&currentEvent);
-	_npcHp = currentNpc->hp;
-	_npcHpMultiple = _npcHp/20;
-	_npcCurrentHp = _npcHp;
 
 	while(1){
 		if(_isRootState){
@@ -110,7 +110,7 @@ int main() {
 	}
 	printf("You win");
 	
-	//free(currentPlayerj->move);
+	free(bag);
 	return 0;
 }
 
@@ -120,7 +120,10 @@ void SwitchState(State *current, State *sub, State newState){
 			(*sub).exitState();
 			_actionComplete=false;
 		}
-		(*current).exitState();
+		if(_isExitState){
+			(*current).exitState();
+			_isExitState=false;
+		}
 		*current=newState;
 		(*current).enterState();
 	}

@@ -54,10 +54,12 @@ typedef struct Player{
 	float defense;
 	int speed;
 	int exp;
+	int nextLvl;
 	int talent;
 	int noOfMove;
-	Subject *subject;
 	Move *move;
+	Subject *subject;
+	Move *moves;
 	Item *item;
 }Player;
 
@@ -80,6 +82,8 @@ bool isItemExist(int item, int noOfItem);
 void Introduction();
 float matchUp(char *effect, char attackerSubject[],char defenderSubject[]);
 float studyUp(char moveSubject[], Subject currentSubject);
+Move npcMove(Npc *currentNpc);
+Move skillTree(Player **currentPlayer);
 
 
 #endif

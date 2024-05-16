@@ -23,6 +23,9 @@ extern bool _isAbsent;
 extern bool _isIntro;
 extern bool _isImportantEvent;
 extern bool _isEventCompleted;
+extern bool _isExitState;
+extern bool _isWin;
+extern bool _isLose;
 
 extern float _playerHp;
 extern float _playerCurrentHp;
@@ -35,7 +38,7 @@ extern Player *currentPlayer;
 extern Npc *currentNpc;
 extern Event *currentEvent;
 
-bool _isWin = false;
+
 
 void BattleScene(){
 	
@@ -120,12 +123,22 @@ void BattleEnterState(){
 		strcpy(text1, currentNpc->name);
 		strcat(text1, " is");
 		dialogBox(text1, text2);
-		sleep(2);
+//		char line1[] = {""};
+//		char line2[] = {"is approaching..."};
+//		strcpy(line1, currentNpc->name);
+//		worldDialogBox(line1, line2);
+		sleep(1);
 	}
-	_isIntro=true;
+	_isIntro = true;
 }
 void BattleUpdateState(){
-	while(1){
+	while(1){		
+		if(_isWin || _isLose){
+			_isBattling = false;
+			_isExploring = true;
+			_isExitState = true;
+			break;
+		}
 		BattleDisplay();
 		char select = getch();
 		if(select=='1'){
@@ -149,35 +162,41 @@ void BattleUpdateState(){
 			}else{
 				_isBattling = false;
 				_isExploring = true;
-				_isWin = true;
-				_isRootState = true;
+				_isAbsent = true;
+				_isExitState = true;
 				break;
 			}
-			
 		}
+		
 	}	
 }
 void BattleExitState(){
 	_isIntro=false;
 	char text1[50];
-	char text2[] = {"You have gained "};
-	char text3[] = {""};
-	char text4[] = {"and acquired "};
-	char text5[] = {""}; 
-	char name[] = {""};
-////	sprintf(text7, "%d exp", currentNpc->exp);
-////	sprintf(text9, "%d talent points", currentNpc->talent);
+	char expText[10];
+	char talentText[10];
+	char text2[20] = {"You have gained "};
+	char text3[20] = {"and acquired "};
+	char text4[20] = {"You have level up!"};
+	int exp = currentNpc->exp;
+	int nextLvl = currentPlayer->nextLvl;
+	int talent = currentNpc->talent;
+	
+	sprintf(expText, "%d", exp);
+	sprintf(talentText, "%d", talent);
 	strcat(text1, currentNpc->name);
 	strcat(text1, " has been");
-//	strcat(text6,text7);
-//	strcat(text8, text9);
+	strcat(text2,expText);
+	strcat(text2," exp");
+	strcat(text3,talentText);
+	strcat(text3," talent points.");
 	clearScreen();
 	BattleScene();
-//	if(_isAbsent){		
-//		_isAbsent = false;
-//		dialogBox("It's time", "to absent.");
-//		sleep(1);
-//	}
+	if(_isAbsent){		
+		_isAbsent = false;
+		dialogBox("It's time", "to absent.");
+		sleep(1);
+	}
 	if(_isWin){
 		_isWin = false;
 		_isEventCompleted =true;
@@ -186,14 +205,34 @@ void BattleExitState(){
 		sleep(1);
 		clearScreen();
 		BattleScene();
-		dialogBox(text2, text4);
+		dialogBox(text2, text3);
+		clearScreen();
+		BattleScene();
+		do{
+			int excessExp = nextLvl-exp;
+			if(excessExp>0){
+				currentPlayer->exp = excessExp;
+			}else{
+				currentPlayer->lvl++;
+				currentPlayer->exp = (excessExp*-1);
+				float floatNextLvl = (float)currentPlayer->nextLvl;
+				floatNextLvl *= 1.25;
+				currentPlayer->nextLvl = (int)floatNextLvl;
+				dialogBox(text4,"");
+				Move move = skillTree(&currentPlayer);
+				clearScreen();
+				BattleScene();
+				dialogBox("You have learned",move.name);
+			}
+		}while(currentPlayer->exp>nextLvl);
 	}
-	//else{
-//		clearScreen();
-//		BattleScene();
-//		dialogBox("Player has been", "whited out...");
-//		sleep(1);
-//	}
+	if(_isLose){
+		_isLose = false;
+		clearScreen();
+		BattleScene();
+		dialogBox("Player has been", "whited out...");
+		sleep(1);
+	}
 }
 
 State BattleState = {BattleEnterState, BattleUpdateState, BattleExitState};

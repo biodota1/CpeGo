@@ -1,24 +1,608 @@
 #include<stdio.h>
-#include "state.h"
 #include <conio.h>
 #include <windows.h>
 #include <string.h>
 #include <stdlib.h>
 #include <stdbool.h>
 
+#include "state.h"
+#include "game.h"
+
 extern char mapLines[40][220];
 extern void copyLines();
-extern int _currentTriggerY;
-extern int _currentTriggerX;
 extern bool _isBattling;
 extern bool _isExploring;
 extern int x;
 extern int y;
+extern int _currentTriggerY;
+extern int _currentTriggerX;
+extern Player *currentPlayer;
+extern Bag *Inventory;
+
+int currentBag = 0;
+bool checkCollisionLeft(int x, int y){
+	bool collied = false;
+	if(x==-33){
+		if(y<-3 && y>-22){
+			collied = true;
+		}
+	}
+	if(x==-40){
+		if(y<-32 && y>-64){
+			collied = true;
+		}
+	}
+	if(x==19){
+		if(y<-38 && y>-71){
+			collied = true;
+		}
+	}
+	return collied;
+}
+bool checkCollisionRight(int x, int y){
+	bool collied = false;
+	if(x==67){
+		collied = true;
+	}
+	if(x==-34){
+		if(y<-38 && y>-71){
+			collied = true;
+		}
+	}
+	if(x==35){
+		if(y<-19 && y>-72){
+			collied = true;
+		}
+	}	
+	return collied;
+}
+bool checkCollisionUp(int x, int y){
+	bool collied = false;
+	if(y==-3){
+		if(x<-33 && x>-74){
+			collied = true;
+		}
+	}
+	if(y==-32){
+		if(x<-40 && x>-74){
+			collied = true;
+		}
+	}
+	if(y==-38){
+		if(x<19 && x>-34){
+			collied = true;
+		}
+	}
+	if(y==-19){
+		if(x<68 && x>35){
+			collied = true;
+		}
+	}
+	return collied;
+}
+bool checkCollisionDown(int x, int y){
+	bool collied = false;
+	if(y==-22){
+		if(x<-33 && x>-74){
+			collied = true;
+		}
+	}
+	if(y==-64){
+		if(x<-40 && x>-74){
+			collied = true;
+		}
+	}
+	if(y==-71){
+		if(x<19 && x>-34){
+			collied = true;
+		}
+	}
+	if(y==-72){
+		if(x<68 && x>35){
+			collied = true;
+		}
+	}
+	return collied;
+}
+
+void upgradeSuccess(){
+	char line1[] = {"Upgrade successfully."};
+	char line2[] = {""};
+	worldDialogBox(line1, line2);
+}
+
+void upgradeStudy(){
+	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+	COORD mapCoord = {0, 0};
+	mapCoord.Y = 0;
+    mapCoord.X = 10;
+    //SET FRAME
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("____________________________");
+    mapCoord.Y++;
+    mapCoord.X--;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|                            |");
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|         UPGRADE            |");
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|                            |");
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|                            |");
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|                            |");
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|____________________________|");
+    //SET CONTENTS
+    mapCoord.X += 5;
+    mapCoord.Y = 4;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("[Y] YES    [N] NO"); 
+}
+
+void selectStats(){
+	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+	COORD mapCoord = {0, 0};
+	mapCoord.Y = 0;
+    mapCoord.X = 40;
+    //SET FRAME
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("______________________________________");
+    mapCoord.Y++;
+    mapCoord.X--;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|                                      |");
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|                STATS                 |");
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|                                      |");
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|                                      |");
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|                                      |");
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|                                      |");
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|                                      |");
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|                                      |");
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|                                      |");
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|                                      |");
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|                                      |");
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|                                      |");
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|                                      |");
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|                                      |");
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|                                      |");
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|                                      |");
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|                                      |");
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|                                      |");
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|                                      |");
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|______________________________________|");
+    //SET CONTENTS
+    mapCoord.X += 10;
+    mapCoord.Y = 4;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("%s", currentPlayer->name);
+    mapCoord.Y += 2;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("Lvl.     %d", currentPlayer->lvl);
+    mapCoord.Y += 2;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("Hp       %.0f", currentPlayer->hp);
+    mapCoord.Y += 2;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("ATT      %.0f", currentPlayer->attack);
+    mapCoord.Y += 2;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("DEF      %.0f", currentPlayer->defense);
+    mapCoord.Y += 2;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("SPD      %.0f", currentPlayer->speed);
+    mapCoord.Y += 2;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("EXP      %d/%d", currentPlayer->exp, currentPlayer->nextLvl);
+    mapCoord.Y += 2;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("TALENT   %d", currentPlayer->talent);
+}
+
+void selectStudy(){
+	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+	COORD mapCoord = {0, 0};
+	mapCoord.Y = 0;
+    mapCoord.X = 40;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("______________________________________");
+    mapCoord.Y++;
+    mapCoord.X--;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|                                      |");
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|               STUDY                  |");
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|                                      |");
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|                                      |");
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|                                      |");
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|                                      |");
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|                                      |");
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|                                      |");
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|                                      |");
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|                                      |");
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|                                      |");
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|                                      |");
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|                                      |");
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|                                      |");
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|                                      |");
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|                                      |");
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|                                      |");
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|                                      |");
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|                                      |");
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|                                      |");
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|                                      |");
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|______________________________________|");
+    
+    //SET CONTENTS
+    mapCoord.X += 3;
+    mapCoord.Y = 4;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("GENERAL      Lvl. %d   [1] UPGRADE", currentPlayer->subject[0].lvl);
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("ATT %.0f%%      DEF  %.0f%%", currentPlayer->subject[0].attack*100,currentPlayer->subject[0].defense*100);
+    mapCoord.Y+=2;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("ENGINEERING  Lvl. %d   [2] UPGRADE", currentPlayer->subject[1].lvl);
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("ATT %.0f%%      DEF  %.0f%%", currentPlayer->subject[1].attack*100,currentPlayer->subject[1].defense*100);
+    mapCoord.Y += 2;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("SCITECH      Lvl. %d   [3] UPGRADE", currentPlayer->subject[2].lvl);
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("ATT %.0f%%      DEF  %.0f%%", currentPlayer->subject[2].attack*100,currentPlayer->subject[2].defense*100);
+    mapCoord.Y += 2;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("MATHEMATICS  Lvl. %d   [4] UPGRADE", currentPlayer->subject[3].lvl);
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("ATT %.0f%%      DEF  %.0f%%", currentPlayer->subject[3].attack*100,currentPlayer->subject[3].defense*100);
+    mapCoord.Y += 2;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("PROGRAMMING  Lvl. %d   [5] UPGRADE", currentPlayer->subject[4].lvl);
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("ATT %.0f%%      DEF  %.0f%%", currentPlayer->subject[4].attack*100,currentPlayer->subject[4].defense*100);
+    mapCoord.Y += 2;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("PE           Lvl. %d   [6] UPGRADE", currentPlayer->subject[0].lvl);
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("ATT %.0f%%      DEF  %.0f%%", currentPlayer->subject[5].attack*100,currentPlayer->subject[5].defense*100);
+}
+
+void selectBag(){
+	int i;
+	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+	COORD mapCoord = {0, 0};
+	mapCoord.Y = 0;
+    mapCoord.X = 40;
+    //SET FRAME
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("______________________________________");
+    mapCoord.Y++;
+    mapCoord.X--;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|                                      |");
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|          <Q     BAG %d     E>         |",currentBag+1);
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|                                      |");
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|                                      |");
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|                                      |");
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|                                      |");
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|                                      |");
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|                                      |");
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|                                      |");
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|                                      |");
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|                                      |");
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|                                      |");
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|                                      |");
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|                                      |");
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|                                      |");
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|                                      |");
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|                                      |");
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|                                      |");
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|                                      |");
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|                                      |");
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|                                      |");
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|                                      |");
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|                                      |");
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|______________________________________|");
+    
+    //SET CONTENTS
+	mapCoord.X += 13;
+    mapCoord.Y = 4;
+    for(i=0;i<Inventory[currentBag].noOfItems;i++){
+    	SetConsoleCursorPosition(hConsole, mapCoord);
+	    printf("[%d] %s",i+1, Inventory[currentBag].item[i].name);
+	    mapCoord.Y += 2;
+	}
+
+}
+
+void selectMoves(){
+	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+	COORD mapCoord = {0, 0};
+	mapCoord.Y = 0;
+    mapCoord.X = 40;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("______________________________________");
+    mapCoord.Y++;
+    mapCoord.X--;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|                                      |");
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|               MOVES                  |");
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|                                      |");
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|                                      |");
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|           Move 1                     |");
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|                                      |");
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|                                      |");
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|           Move 2                     |");
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|                                      |");
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|                                      |");
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|           Move 3                     |");
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|                                      |");
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|                                      |");
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|           Move 4                     |");
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|                                      |");
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|                                      |");
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|       [C] Change Moves               |");
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|                                      |");
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|                                      |");
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|______________________________________|");
+    //SET CONTENTS
+	mapCoord.X += 13;
+    mapCoord.Y = 4;
+}
+
+void selectSave(){
+	
+}
+
+void selectExit(){
+}
+
+void selectMenu(){
+	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+	COORD mapCoord = {0, 0};
+	mapCoord.Y = 0;
+    mapCoord.X = 80;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("__________________");
+    mapCoord.Y++;
+    mapCoord.X--;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|                  |");
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|  Myer            |");
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|  Lvl. 1          |");
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|  HP: 25/25       |");
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|                  |");
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|                  |");
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|  [1] STATS       |");
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|                  |");
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|  [2] STUDY       |");
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|                  |");
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|  [3] BAG         |");
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|                  |");
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|  [4] MOVES       |");
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|                  |");
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|  [5] SAVE        |");
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|                  |");
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|  [6] EXIT        |");
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|                  |");
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|__________________|");
+    
+}
 
 void character(int anim){
 	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 	COORD mapCoord = {0, 0};
-	mapCoord.Y = 10;
+	mapCoord.Y = 13;
     mapCoord.X = 40;
     SetConsoleCursorPosition(hConsole, mapCoord);
 	printf(" _____");
@@ -39,14 +623,13 @@ void character(int anim){
 }
 
 void EnterExploreState(){
-	printf("Enter Explore");
-	sleep(2);
+	
 }
 void UpdateExploreState(){
 	copyLines();
 	HWND consoleWindow = GetConsoleWindow();
     ShowWindow(consoleWindow, SW_MAXIMIZE);
-    int currentCoordY =91;
+    int currentCoordY =88;
     int currentCoordX =72;
     int currentLimitNegY = -75;
     int currentLimitNegX = -73;
@@ -56,195 +639,26 @@ void UpdateExploreState(){
     HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 	COORD mapCoord = { 0, 0};
 
-
+	int i;
 	int anim =0;
-	char display01[100];
-	char display02[100];
-	char display03[100];
-	char display04[100];
-	char display05[100];
-	char display06[100];
-	char display07[100];
-	char display08[100];
-	char display09[100];
-	char display10[100];
-	char display11[100];
-	char display12[100];
-	char display13[100];
-	char display14[100];
-	char display15[100];
-	char display16[100];
-	char display17[100];
-	char display18[100];
-	char display19[100];
-	char display20[100];
-	char display21[100];
-	char display22[100];
-	char display23[100];
-	char display24[100];
-	char display25[100];
-	char display26[100];
-	char display27[100];
-	char display28[100];
-	char display29[100];
-	char display30[100];
-	display01[99] - '\0';
-	display02[99] - '\0';
-	display03[99] - '\0';
-	display04[99] - '\0';
-	display05[99] - '\0';
-	display06[99] - '\0';
-	display07[99] - '\0';
-	display08[99] - '\0';
-	display09[99] - '\0';
-	display10[99] - '\0';
-	display11[99] - '\0';
-	display12[99] - '\0';
-	display13[99] - '\0';
-	display14[99] - '\0';
-	display15[99] - '\0';
-	display16[99] - '\0';
-	display17[99] - '\0';
-	display18[99] - '\0';
-	display19[99] - '\0';
-	display20[99] - '\0';
-	display21[99] - '\0';
-	display22[99] - '\0';
-	display23[99] - '\0';
-	display24[99] - '\0';
-	display25[99] - '\0';
-	display26[99] - '\0';
-	display27[99] - '\0';
-	display28[99] - '\0';
-	display29[99] - '\0';
-	display30[99] - '\0';
-
+	char displays[30][100];
+	for(i=0;i<30;i++){
+		displays[i][99] = '\0';
+	}
 	
 	while(1){
 	mapCoord.X = 0;
 	mapCoord.Y = 0;
-	memcpy(display01, mapLines[currentCoordY+y] + x + currentCoordX, 99);
-	memcpy(display02, mapLines[currentCoordY+y+1] + x + currentCoordX, 99);
-	memcpy(display03, mapLines[currentCoordY+y+2] + x + currentCoordX, 99);
-	memcpy(display04, mapLines[currentCoordY+y+3] + x + currentCoordX, 99);
-	memcpy(display05, mapLines[currentCoordY+y+4] + x + currentCoordX, 99);
-	memcpy(display06, mapLines[currentCoordY+y+5] + x + currentCoordX, 99);
-	memcpy(display07, mapLines[currentCoordY+y+6] + x + currentCoordX, 99);
-	memcpy(display08, mapLines[currentCoordY+y+7] + x + currentCoordX, 99);
-	memcpy(display09, mapLines[currentCoordY+y+8] + x + currentCoordX, 99);
-	memcpy(display10, mapLines[currentCoordY+y+9] + x + currentCoordX, 99);
-	memcpy(display11, mapLines[currentCoordY+y+10] + x + currentCoordX, 99);
-	memcpy(display12, mapLines[currentCoordY+y+11] + x + currentCoordX, 99);
-	memcpy(display13, mapLines[currentCoordY+y+12] + x + currentCoordX, 99);
-	memcpy(display14, mapLines[currentCoordY+y+13] + x + currentCoordX, 99);
-	memcpy(display15, mapLines[currentCoordY+y+14] + x + currentCoordX, 99);
-	memcpy(display16, mapLines[currentCoordY+y+15] + x + currentCoordX, 99);
-	memcpy(display17, mapLines[currentCoordY+y+16] + x + currentCoordX, 99);
-	memcpy(display18, mapLines[currentCoordY+y+17] + x + currentCoordX, 99);
-	memcpy(display19, mapLines[currentCoordY+y+18] + x + currentCoordX, 99);
-	memcpy(display20, mapLines[currentCoordY+y+19] + x + currentCoordX, 99);
-	memcpy(display21, mapLines[currentCoordY+y+20] + x + currentCoordX, 99);
-	memcpy(display22, mapLines[currentCoordY+y+21] + x + currentCoordX, 99);
-	memcpy(display23, mapLines[currentCoordY+y+22] + x + currentCoordX, 99);
-	memcpy(display24, mapLines[currentCoordY+y+23] + x + currentCoordX, 99);
-	memcpy(display25, mapLines[currentCoordY+y+24] + x + currentCoordX, 99);
-	memcpy(display26, mapLines[currentCoordY+y+25] + x + currentCoordX, 99);
-	memcpy(display27, mapLines[currentCoordY+y+26] + x + currentCoordX, 99);
-	memcpy(display28, mapLines[currentCoordY+y+27] + x + currentCoordX, 99);
-	memcpy(display29, mapLines[currentCoordY+y+28] + x + currentCoordX, 99);
-	memcpy(display30, mapLines[currentCoordY+y+29] + x + currentCoordX, 99);
+	for(i=0;i<30;i++){
+		memcpy(displays[i], mapLines[currentCoordY+y+i] + x + currentCoordX, 99);
+	}
 	
-	
-	SetConsoleCursorPosition(hConsole, mapCoord);
-	printf("%s",display01);
-	mapCoord.Y++;
-	SetConsoleCursorPosition(hConsole, mapCoord);
-	printf("%s",display02);
-	mapCoord.Y++;
-	SetConsoleCursorPosition(hConsole, mapCoord);
-	printf("%s",display03);
-	mapCoord.Y++;
-	SetConsoleCursorPosition(hConsole, mapCoord);
-	printf("%s",display04);
-	mapCoord.Y++;
-	SetConsoleCursorPosition(hConsole, mapCoord);
-	printf("%s",display05);
-	mapCoord.Y++;
-	SetConsoleCursorPosition(hConsole, mapCoord);
-	printf("%s",display06);
-	mapCoord.Y++;
-	SetConsoleCursorPosition(hConsole, mapCoord);
-	printf("%s",display07);
-	mapCoord.Y++;
-	SetConsoleCursorPosition(hConsole, mapCoord);
-	printf("%s",display08);
-	mapCoord.Y++;
-	SetConsoleCursorPosition(hConsole, mapCoord);
-	printf("%s",display09);
-	mapCoord.Y++;
-	SetConsoleCursorPosition(hConsole, mapCoord);
-	printf("%s",display10);
-	mapCoord.Y++;
-	SetConsoleCursorPosition(hConsole, mapCoord);
-	printf("%s",display11);
-	mapCoord.Y++;
-	SetConsoleCursorPosition(hConsole, mapCoord);
-	printf("%s",display12);
-	mapCoord.Y++;
-	SetConsoleCursorPosition(hConsole, mapCoord);
-	printf("%s",display13);
-	mapCoord.Y++;
-	SetConsoleCursorPosition(hConsole, mapCoord);
-	printf("%s",display14);
-	mapCoord.Y++;
-	SetConsoleCursorPosition(hConsole, mapCoord);
-	printf("%s",display15);
-	mapCoord.Y++;
-	SetConsoleCursorPosition(hConsole, mapCoord);
-	printf("%s",display16);
-	mapCoord.Y++;
-	SetConsoleCursorPosition(hConsole, mapCoord);
-	printf("%s",display17);
-	mapCoord.Y++;
-	SetConsoleCursorPosition(hConsole, mapCoord);
-	printf("%s",display18);
-	mapCoord.Y++;
-	SetConsoleCursorPosition(hConsole, mapCoord);
-	printf("%s",display19);
-	mapCoord.Y++;
-	SetConsoleCursorPosition(hConsole, mapCoord);
-	printf("%s",display20);
-	mapCoord.Y++;
-	SetConsoleCursorPosition(hConsole, mapCoord);
-	printf("%s",display21);
-	mapCoord.Y++;
-	SetConsoleCursorPosition(hConsole, mapCoord);
-	printf("%s",display22);
-	mapCoord.Y++;
-	SetConsoleCursorPosition(hConsole, mapCoord);
-	printf("%s",display23);
-	mapCoord.Y++;
-	SetConsoleCursorPosition(hConsole, mapCoord);
-	printf("%s",display24);
-	mapCoord.Y++;
-	SetConsoleCursorPosition(hConsole, mapCoord);
-	printf("%s",display25);
-	mapCoord.Y++;
-	SetConsoleCursorPosition(hConsole, mapCoord);
-	printf("%s",display26);
-	mapCoord.Y++;
-	SetConsoleCursorPosition(hConsole, mapCoord);
-	printf("%s",display27);
-	mapCoord.Y++;
-	SetConsoleCursorPosition(hConsole, mapCoord);
-	printf("%s",display28);
-	mapCoord.Y++;
-	SetConsoleCursorPosition(hConsole, mapCoord);
-	printf("%s",display29);
-	mapCoord.Y++;
-	SetConsoleCursorPosition(hConsole, mapCoord);
-	printf("%s",display30);
-	printf("%d",y);	
+	for(i=0;i<30;i++){
+		SetConsoleCursorPosition(hConsole, mapCoord);
+		printf("%s",displays[i]);
+		mapCoord.Y++;
+	}
+	printf("%d,%d",x,y);
 	character(anim);
 	
 	
@@ -257,10 +671,10 @@ void UpdateExploreState(){
 	
 	char keyInput = getch();
 	
-	
+	//KEYINPUT UP
 	if(keyInput=='w')
 	{
-		if(y>currentLimitNegY){
+		if(y>currentLimitNegY && checkCollisionUp(x,y)==false){
 			y--;
 			if(anim<1){
 				anim++;
@@ -268,17 +682,17 @@ void UpdateExploreState(){
 				anim=0;
 			}
 		}else{
-			y=currentLimitNegY;
+			//y=currentLimitNegY;
 			if(anim<1){
 				anim++;
 			}else{
 				anim=0;
 			}
 		}
-		
-	}else if(keyInput=='d')
+	//KEYINPUT LEFT	
+	}else if(keyInput=='d' )
 	{
-		if(x<currentLimitPosX){
+		if(x<currentLimitPosX && checkCollisionRight(x, y)==false){
 			x++;
 			if(anim<1){
 				anim++;
@@ -286,16 +700,16 @@ void UpdateExploreState(){
 				anim=0;
 			}
 		}else{
-			x=currentLimitPosX;
+//			x=currentLimitPosX;
 			if(anim<1){
 				anim++;
 			}else{
 				anim=0;
 			}
 		}
-		
-	}else if(keyInput=='s'){
-		if(y<currentLimitPosY){
+	//KEYINPUT DOWN		
+	}else if(keyInput=='s' ){
+		if(y<currentLimitPosY && checkCollisionDown(x,y)==false){
 			y++;
 			if(anim<1){
 				anim++;
@@ -303,31 +717,216 @@ void UpdateExploreState(){
 				anim=0;
 			}
 		}else{
-			y=currentLimitPosY;
+//			y=currentLimitPosY;
 			if(anim<1){
 				anim++;
 			}else{
 				anim=0;
 			}
 		}
-		
+	//KEYINPUT RIGHT		
 	}else if(keyInput=='a'){
-		if(x>currentLimitNegX){
+		if(x>currentLimitNegX && checkCollisionLeft(x,y)==false){
 			x--;
+			
 			if(anim<1){
 				anim++;
 			}else{
 				anim=0;
 			}
 		}else{
-			x=currentLimitNegX;
+			//x=currentLimitNegX;
 			if(anim<1){
 				anim++;
 			}else{
 				anim=0;
 			}
 		}
-		
+	//KEYINPUT MENU		
+	}else if(keyInput==' '){
+		selectMenu();
+		while(1){
+			char select = getch();
+			if(select == ' ' || select == 'b'){
+				break;
+			//STATS MENU		
+			}else if(select == '1'){
+				selectStats();
+				while(1){
+					char select = getch();
+					if(select=='b'){
+						break;
+					}
+				}
+				break;
+			//STUDY MENU
+			}else if(select == '2'){
+				selectStudy();
+				while(1){
+					char select = getch();
+					if(select=='1'){
+						upgradeStudy();
+						while(1){
+							char select = getch();
+							if(select=='y'){
+								upgradeSuccess();
+								currentPlayer->subject[0].lvl++;
+								currentPlayer->subject[0].attack+=.10;
+								currentPlayer->subject[0].defense+=.10;
+								break;
+							}else if(select=='n' || select=='b'){
+								break;
+							}
+							
+						}
+						break;
+					}else if(select=='2'){
+						upgradeStudy();
+						while(1){
+							char select = getch();
+							if(select=='y'){
+								upgradeSuccess();
+								currentPlayer->subject[1].lvl++;
+								currentPlayer->subject[1].attack+=.10;
+								currentPlayer->subject[1].defense+=.10;
+								break;
+							}else if(select=='n' || select=='b'){
+								break;
+							}
+							
+						}
+						break;
+					}else if(select=='3'){
+						upgradeStudy();
+						while(1){
+							char select = getch();
+							if(select=='y'){
+								upgradeSuccess();
+								currentPlayer->subject[2].lvl++;
+								currentPlayer->subject[2].attack+=.10;
+								currentPlayer->subject[2].defense+=.10;
+								break;
+							}else if(select=='n' || select=='b'){
+								break;
+							}
+							
+						}
+						break;
+					}else if(select=='4'){
+						upgradeStudy();
+						while(1){
+							char select = getch();
+							if(select=='y'){
+								upgradeSuccess();
+								currentPlayer->subject[3].lvl++;
+								currentPlayer->subject[3].attack+=.10;
+								currentPlayer->subject[3].defense+=.10;
+								break;
+							}else if(select=='n' || select=='b'){
+								break;
+							}
+							
+						}
+						break;
+					}else if(select=='5'){
+						upgradeStudy();
+						while(1){
+							char select = getch();
+							if(select=='y'){
+								upgradeSuccess();
+								currentPlayer->subject[4].lvl++;
+								currentPlayer->subject[4].attack+=.10;
+								currentPlayer->subject[4].defense+=.10;
+								break;
+							}else if(select=='n' || select=='b'){
+								break;
+							}
+							
+						}
+						break;
+					}else if(select=='6'){
+						upgradeStudy();
+						while(1){
+							char select = getch();
+							if(select=='y'){
+								upgradeSuccess();
+								currentPlayer->subject[5].lvl++;
+								currentPlayer->subject[5].attack+=.10;
+								currentPlayer->subject[5].defense+=.10;
+								break;
+							}else if(select=='n' || select=='b'){
+								break;
+							}
+							
+						}
+						break;
+					}
+					if(select=='b'){
+						break;
+					}
+				}
+				break;
+			//BAG MENU	
+			}else if(select == '3'){
+				selectBag();
+				while(1){
+					char select = getch();
+					
+					if(select=='q'){
+						if(currentBag>0){
+							currentBag--;	
+						}else{
+							currentBag=0;
+						}
+						
+						selectBag();
+					}
+					else if(select=='e'){
+						if(currentBag<2){
+							currentBag++;
+						}else{
+							currentBag=2;
+						}
+						
+						selectBag();
+					}
+					else if(select=='b'){
+						break;
+					}
+				}
+				break;
+			//MOVES MENU	
+			}else if(select == '4'){
+				selectMoves();
+				while(1){
+					char select = getch();
+					if(select=='b'){
+						break;
+					}
+				}
+				break;
+			//SAVE	
+			}else if(select == '5'){
+				selectSave();
+				while(1){
+					char select = getch();
+					if(select=='b'){
+						break;
+					}
+				}
+				break;
+			//EXIT	
+			}else if(select == '6'){
+				selectExit();
+				while(1){
+					char select = getch();
+					if(select=='b'){
+						break;
+					}
+				}
+				break;		
+			}	
+		}
 	}
 	}
 	

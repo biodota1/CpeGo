@@ -97,8 +97,9 @@ Subject getSubject(int select){
 }
 Player newGame(){
 	int i;
-	Player player = {"", 1, 25, 30, 30, 100, 0, 0, 1};
+	Player player = {"", 1, 25, 30, 30, 100, 0, 15, 0, 1};
 	player.subject = (Subject*) malloc(6*sizeof(Subject));
+	player.move = (Move*) calloc(4, sizeof(Move));
 	for(i=0;i<6;i++){
 		player.subject[i] = getSubject(i);
 	}
@@ -111,33 +112,39 @@ Player newGame(){
 	while(1){
 		char choice = getch();
 		if(choice=='1'){
-			player.move = (Move*) malloc(sizeof(Move));
-			*player.move = getMove(0);
+			player.moves = (Move*) malloc(sizeof(Move));
+			*player.moves = getMove(0);
+			player.move[0] = player.moves[0];
 			break;
 		}
 		if(choice=='2'){
-			player.move = (Move*) malloc(sizeof(Move));
-			*player.move = getMove(1);
+			player.moves = (Move*) malloc(sizeof(Move));
+			*player.moves = getMove(1);
+			player.move[0] = player.moves[0];
 			break;
 		}
 		if(choice=='3'){
-			player.move = (Move*) malloc(sizeof(Move));
-			*player.move = getMove(2);
+			player.moves = (Move*) malloc(sizeof(Move));
+			*player.moves = getMove(2);
+			player.move[0] = player.moves[0];
 			break;
 		}
 		if(choice=='4'){
-			player.move = (Move*) malloc(sizeof(Move));
-			*player.move = getMove(3);
+			player.moves = (Move*) malloc(sizeof(Move));
+			*player.moves = getMove(3);
+			player.move[0] = player.moves[0];
 			break;
 		}
 		if(choice=='5'){
-			player.move = (Move*) malloc(sizeof(Move));
-			*player.move = getMove(4);
+			player.moves = (Move*) malloc(sizeof(Move));
+			*player.moves = getMove(4);
+			player.move[0] = player.moves[0];
 			break;
 		}
 		if(choice=='6'){
-			player.move = (Move*) malloc(sizeof(Move));
-			*player.move = getMove(5);
+			player.moves = (Move*) malloc(sizeof(Move));
+			*player.moves = getMove(5);
+			player.move[0] = player.moves[0];
 			break;
 		}
 		
@@ -191,6 +198,17 @@ Npc spawnNpc(int select){
 		npc.subject[0] = getSubject(5);
 		return npc;
 	}
+}
+Move npcMove(Npc *currentNpc){
+	Move move;
+	int randomNumber = 0;
+    srand(time(NULL));
+	
+    randomNumber = rand() % currentNpc->noOfMove+1;
+    
+    move = currentNpc->move[randomNumber-1];
+    
+    return move;
 }
 void introduction(){
 	char text1[] = {"All Hail, Maroon and Gold!!"};
@@ -270,11 +288,11 @@ float matchUp(char *effect, char attackerSubject[],char defenderSubject[]){
 	}
 	
 	if(plusDamage==2){
-		strcpy(effect, "It's very effective");
+		strcat(effect, "It's very effective");
 	}else if(plusDamage==0.5){
-		strcpy(effect, "It's not very effective");
+		strcat(effect, "It's not very effective");
 	}else if(plusDamage==1){
-		strcpy(effect, "");
+		strcat(effect, "");
 	}
 	return plusDamage;
 	
@@ -288,5 +306,27 @@ float studyUp(char moveSubject[], Subject currentSubject){
 	
 	return attackUp;
 }
-
+Move skillTree(Player **currentPlayer){
+	if((*currentPlayer)->lvl == 2){
+		(*currentPlayer)->noOfMove++;
+		(*currentPlayer)->moves = realloc((*currentPlayer)->moves, (*currentPlayer)->noOfMove*sizeof(Move));
+		(*currentPlayer)->moves[(*currentPlayer)->noOfMove-1] = getMove(1);
+		(*currentPlayer)->move[1] = (*currentPlayer)->moves[(*currentPlayer)->noOfMove-1];
+		return (*currentPlayer)->moves[(*currentPlayer)->noOfMove-1];
+	}
+	if((*currentPlayer)->lvl == 3){
+		(*currentPlayer)->noOfMove++;
+		(*currentPlayer)->moves = realloc((*currentPlayer)->moves, (*currentPlayer)->noOfMove*sizeof(Move));
+		(*currentPlayer)->moves[(*currentPlayer)->noOfMove-1] = getMove(2);
+		(*currentPlayer)->move[2] = (*currentPlayer)->moves[(*currentPlayer)->noOfMove-1];
+		return (*currentPlayer)->moves[(*currentPlayer)->noOfMove-1];
+	}
+	if((*currentPlayer)->lvl == 4){
+		(*currentPlayer)->noOfMove++;
+		(*currentPlayer)->moves = realloc((*currentPlayer)->moves, (*currentPlayer)->noOfMove*sizeof(Move));
+		(*currentPlayer)->moves[(*currentPlayer)->noOfMove-1] = getMove(2);
+		(*currentPlayer)->move[3] = (*currentPlayer)->moves[(*currentPlayer)->noOfMove-1];
+		return (*currentPlayer)->moves[(*currentPlayer)->noOfMove-1];
+	}
+}
 
