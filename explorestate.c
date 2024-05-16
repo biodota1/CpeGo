@@ -20,6 +20,100 @@ extern Player *currentPlayer;
 extern Bag *Inventory;
 
 int currentBag = 0;
+
+void changeMoves(){
+	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+	COORD mapCoord = {0, 0};
+	mapCoord.Y = 0;
+    mapCoord.X = 10;
+    //SET FRAME
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("____________________________");
+    mapCoord.Y++;
+    mapCoord.X--;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|                            |");
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|       Select a move        |");
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|                            |");
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|                            |");
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|                            |");
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|                            |");
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|                            |");
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|                            |");
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|                            |");
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|                            |");
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|                            |");
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|                            |");
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|                            |");
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|                            |");
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|                            |");
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|                            |");
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|                            |");
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|                            |");
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|                            |");
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|                            |");
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|                            |");
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|                            |");
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|                            |");
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|____________________________|");
+    //SET CONTENTS
+    mapCoord.X += 2;
+    mapCoord.Y = 4;
+    int y =1;
+    int i;
+    for(i=0;i<currentPlayer->noOfMove;i++){
+    	SetConsoleCursorPosition(hConsole, mapCoord);
+    	printf("[%d] %s",i+1, currentPlayer->moves[i].name);
+    	mapCoord.Y += 2;
+	}
+}
+
 bool checkCollisionLeft(int x, int y){
 	bool collied = false;
 	if(x==-33){
@@ -470,10 +564,7 @@ void selectMoves(){
     printf("|                                      |");
     mapCoord.Y++;
     SetConsoleCursorPosition(hConsole, mapCoord);
-    printf("|                                      |");
-    mapCoord.Y++;
-    SetConsoleCursorPosition(hConsole, mapCoord);
-    printf("|           Move 1                     |");
+    printf("|       Select a move to change        |");
     mapCoord.Y++;
     SetConsoleCursorPosition(hConsole, mapCoord);
     printf("|                                      |");
@@ -482,7 +573,10 @@ void selectMoves(){
     printf("|                                      |");
     mapCoord.Y++;
     SetConsoleCursorPosition(hConsole, mapCoord);
-    printf("|           Move 2                     |");
+    printf("|                                      |");
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|                                      |");
     mapCoord.Y++;
     SetConsoleCursorPosition(hConsole, mapCoord);
     printf("|                                      |");
@@ -491,7 +585,10 @@ void selectMoves(){
     printf("|                                      |");
     mapCoord.Y++;
     SetConsoleCursorPosition(hConsole, mapCoord);
-    printf("|           Move 3                     |");
+    printf("|                                      |");
+    mapCoord.Y++;
+    SetConsoleCursorPosition(hConsole, mapCoord);
+    printf("|                                      |");
     mapCoord.Y++;
     SetConsoleCursorPosition(hConsole, mapCoord);
     printf("|                                      |");
@@ -500,16 +597,10 @@ void selectMoves(){
     printf("|                                      |");
     mapCoord.Y++;
     SetConsoleCursorPosition(hConsole, mapCoord);
-    printf("|           Move 4                     |");
-    mapCoord.Y++;
-    SetConsoleCursorPosition(hConsole, mapCoord);
     printf("|                                      |");
     mapCoord.Y++;
     SetConsoleCursorPosition(hConsole, mapCoord);
     printf("|                                      |");
-    mapCoord.Y++;
-    SetConsoleCursorPosition(hConsole, mapCoord);
-    printf("|       [C] Change Moves               |");
     mapCoord.Y++;
     SetConsoleCursorPosition(hConsole, mapCoord);
     printf("|                                      |");
@@ -520,8 +611,21 @@ void selectMoves(){
     SetConsoleCursorPosition(hConsole, mapCoord);
     printf("|______________________________________|");
     //SET CONTENTS
-	mapCoord.X += 13;
-    mapCoord.Y = 4;
+	mapCoord.X += 4;
+    mapCoord.Y = 6;
+    int y =1;
+    int i;
+    for(i=0;i<4;i++){
+    	SetConsoleCursorPosition(hConsole, mapCoord);
+    	if(strlen(currentPlayer->move[i].name) > 0){
+    		printf("[%d] %s",y, currentPlayer->move[i].name);
+    		mapCoord.Y += 3;
+    		y++;
+		}else{
+			
+		}
+	    
+	}
 }
 
 void selectSave(){
@@ -900,6 +1004,9 @@ void UpdateExploreState(){
 				selectMoves();
 				while(1){
 					char select = getch();
+					if(select=='1'){
+						changeMoves();
+					}
 					if(select=='b'){
 						break;
 					}

@@ -16,6 +16,8 @@ extern int *_noOfItems;
 extern int _currentBag;
 extern bool _isBag;
 extern bool _actionComplete;
+extern float _itemEffectAtt;
+extern float _itemEffectDef;
 
 int _selectedItem;
 
@@ -172,6 +174,22 @@ void BagExitState(){
 	clearScreen();
 	BattleScene();
 	dialogBox(text1, text2);
+	Item item = Inventory[_currentBag].item[_selectedItem-1];
+	clearScreen();
+	BattleScene();
+	if(item.effects=="ATTACK"){
+		_itemEffectAtt = item.value;
+		dialogBox("Your attack has increased.", "");
+	}else if(item.effects=="DEFENSE"){
+		_itemEffectDef = item.value;
+		dialogBox("Your defense has increased.", "");
+	}else if(item.effects=="HEAL"){
+		_itemEffectDef = item.value;
+		dialogBox("Your health has been restored.", "");
+	}else if(item.effects=="SPEED"){
+		_itemEffectAtt = item.value;
+		dialogBox("Your speed has increased.", "");
+	}
 }
 
 State BagState = {BagEnterState, BagUpdateState, BagExitState};

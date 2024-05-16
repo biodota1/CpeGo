@@ -25,14 +25,14 @@ extern Npc *currentNpc;
 extern Subject *currentSubject;
 extern float _playerCurrentHp;
 extern float _npcCurrentHp;
+extern float _itemEffectAtt;
+extern float _itemEffectDef;
 
 int _move;
 
 void FightDisplay(){
 	clearScreen();
 	int i;
-	int j=0;
-	int k=0;
 	char text1[50] = {""};
 	char text2[50] = {""};
 	int length1 =0;
@@ -126,7 +126,7 @@ void FightExitState(){
 	
 	Move npcMoves = npcMove(currentNpc);
 	
-	float studyAttBoost = currentPlayer->move[_move].damage*studyUp(currentPlayer->move[_move].name,*currentSubject);
+	float studyAttBoost = currentPlayer->move[_move].damage+studyUp(currentPlayer->move[_move].name,*currentSubject);
 	float studyDefBoost = npcMoves.damage*studyUp(npcMoves.name, *currentSubject);
 	
 	strcat(text1, currentPlayer->name);
@@ -141,7 +141,7 @@ void FightExitState(){
 	BattleScene();
 	dialogBox(text1, text2);
 	sleep(1);
-	_npcCurrentHp-=(((currentPlayer->move[_move].damage/100)*currentPlayer->attack*matchUp(text4, currentPlayer->move[_move].subject, currentNpc->subject[0].name))+studyAttBoost+20);
+	_npcCurrentHp-=((((currentPlayer->attack+_itemEffectAtt)*studyAttBoost)*matchUp(text4, currentPlayer->move[_move].subject, currentNpc->subject[0].name)));
 	if(_npcCurrentHp<=0){
 		_npcCurrentHp=0;
 		_isWin = true;
@@ -153,7 +153,7 @@ void FightExitState(){
 		BattleScene();
 		dialogBox(text5, text6);
 		sleep(1);
-		_playerCurrentHp-=(((npcMoves.damage/100)*currentNpc->attack*matchUp(text7, npcMoves.subject, currentSubject->name))-studyDefBoost);
+		_playerCurrentHp-=((npcMoves.damage*currentNpc->attack)*matchUp(text7, npcMoves.subject, currentSubject->name))-studyDefBoost);
 		if(_playerCurrentHp<=0){
 			_isLose = true;
 			_playerCurrentHp=0;

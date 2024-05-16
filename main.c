@@ -39,6 +39,8 @@ float _playerCurrentHp;
 float _npcHp;
 float _npcHpMultiple;
 float _npcCurrentHp;
+float _itemEffectAtt;
+float _itemEffectDef;
 
 int *_noOfItems;
 int _currentBag=0;

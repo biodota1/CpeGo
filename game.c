@@ -9,23 +9,23 @@
 
 Item getItem(int select){
 	if(select==0){
-		Item item = {"Ballpen"};
+		Item item = {"Ballpen", 5, "ATTACK"};
 		return item;
 	}
 	if(select==1){
-		Item item = {"Calculator"};
+		Item item = {"Calculator", 25, "SPEED"};
 		return item;
 	}
 	if(select==2){
-		Item item = {"Paper"};
+		Item item = {"Paper", 5 ,"DEFENSE"};
 		return item;
 	}
 	if(select==3){
-		Item item = {"Milo"};
+		Item item = {"Milo", 20, "HEAL"};
 		return item;
 	}
 	if(select==4){
-		Item item = {"Meatroll"};
+		Item item = {"Meatroll", 25, "HEAL"};
 		return item;
 	}
 }
@@ -43,27 +43,27 @@ bool isItemExist(int item, int noOfItem){
 }
 Move getMove(int select){
 	if(select==0){
-		Move move = {"Psychoanalytic Theory", "GENERAL", 15, 20, "NORMAL"};
+		Move move = {"Psychoanalytic Theory", "GENERAL", 0.20 , 20, "NORMAL"};
 		return move;
 	}
 	if(select==1){
-		Move move = {"CpE Orientation", "ENGINEERING", 15, 20, "NORMAL"};
+		Move move = {"CpE Orientation", "ENGINEERING", 0.20 , 20, "NORMAL"};
 		return move;
 	}
 	if(select==2){
-		Move move = {"Scalar and Vector", "SCITECH", 15, 20, "NORMAL"};
+		Move move = {"Scalar and Vector", "SCITECH", 0.20 , 20, "NORMAL"};
 		return move;
 	}
 	if(select==3){
-		Move move = {"Algebraic Expression", "MATHEMATICS", 15, 20, "NORMAL"};
+		Move move = {"Algebraic Expression", "MATHEMATICS", 0.20 , 20, "NORMAL"};
 		return move;
 	}	
 	if(select==4){
-		Move move = {"C Data Types", "PROGRAMMING", 15, 20, "NORMAL"};
+		Move move = {"C Data Types", "PROGRAMMING", 0.20 , 20, "NORMAL"};
 		return move;
 	}
 	if(select==5){
-		Move move = {"Squats", "PE", 15, 20, "NORMAL"};
+		Move move = {"Squats", "PE", 0.20 , 20, "NORMAL"};
 		return move;
 	}
 }
@@ -154,7 +154,7 @@ Player newGame(){
 }
 Npc spawnNpc(int select){
 	if(select==0){
-		Npc npc = {"Manong Guard", 1, 20, 20, 20, 100, 20, 10, 2};
+		Npc npc = {"Manong Guard", 1, 20, 20, 20, 100, 100, 10, 2};
 		npc.move = (Move*) calloc(npc.noOfMove,sizeof(Move));
 		npc.move[0] = getMove(0);
 		npc.move[1] = getMove(1);
@@ -326,6 +326,18 @@ Move skillTree(Player **currentPlayer){
 		(*currentPlayer)->moves = realloc((*currentPlayer)->moves, (*currentPlayer)->noOfMove*sizeof(Move));
 		(*currentPlayer)->moves[(*currentPlayer)->noOfMove-1] = getMove(2);
 		(*currentPlayer)->move[3] = (*currentPlayer)->moves[(*currentPlayer)->noOfMove-1];
+		return (*currentPlayer)->moves[(*currentPlayer)->noOfMove-1];
+	}
+	if((*currentPlayer)->lvl == 5){
+		(*currentPlayer)->noOfMove++;
+		(*currentPlayer)->moves = realloc((*currentPlayer)->moves, (*currentPlayer)->noOfMove*sizeof(Move));
+		(*currentPlayer)->moves[(*currentPlayer)->noOfMove-1] = getMove(2);
+		return (*currentPlayer)->moves[(*currentPlayer)->noOfMove-1];
+	}
+	if((*currentPlayer)->lvl == 6){
+		(*currentPlayer)->noOfMove++;
+		(*currentPlayer)->moves = realloc((*currentPlayer)->moves, (*currentPlayer)->noOfMove*sizeof(Move));
+		(*currentPlayer)->moves[(*currentPlayer)->noOfMove-1] = getMove(2);
 		return (*currentPlayer)->moves[(*currentPlayer)->noOfMove-1];
 	}
 }

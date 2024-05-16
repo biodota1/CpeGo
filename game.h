@@ -7,7 +7,7 @@
 
 typedef struct Item{
 	char name[20];
-	int value;
+	float value;
 	char effects[20];
 }Item;
 

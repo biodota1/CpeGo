@@ -41,19 +41,25 @@ extern Event *currentEvent;
 
 
 void BattleScene(){
-	
 	float playerHpDisplay = _playerCurrentHp/_playerHpMultiple;
 	float playerHpTaken = 20-playerHpDisplay;
 	float npcHpDisplay = _npcCurrentHp/_npcHpMultiple;
 	float npcHpTaken = 20-npcHpDisplay;
+	WCHAR hpChar[] = { 0x2588, 0 };
+    WCHAR hpCharTaken[] = { 0x2592, 0 };   
 	int i=0;
 	char text1[15] = {""};
 	char text2[48] = {""};
 	strcat(text1, currentPlayer->name);
 	strcat(text2, currentNpc->name);
+	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+	COORD mapCoord = {0, 0};
 	
+    
 	//ENEMY
-	printf("\n");
+	mapCoord.Y = 3;
+    mapCoord.X = 0;
+    SetConsoleCursorPosition(hConsole, mapCoord);
 	int npcNameSize = 0;
 	for(i=sizeof(text2)-1;i>-1;i--){
 		if(text2[i]=='\0'){
@@ -63,11 +69,11 @@ void BattleScene(){
 		}	
 	}
 	printf("%s", text2);
-	printf("  Lvl: 1");
-	printf("\n\t\t\t\t\t\t  HP:");
-	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-    WCHAR hpChar[] = { 0x2588, 0 };
-    WCHAR hpCharTaken[] = { 0x2592, 0 };          
+	printf("   Lvl: 1");
+	mapCoord.Y++;
+	mapCoord.X=51;
+	SetConsoleCursorPosition(hConsole, mapCoord);
+	printf("HP:");
     for(i =0;i<npcHpDisplay;i++){
         WriteConsoleW(hConsole, hpChar, 1, NULL, NULL);
     }
@@ -77,8 +83,11 @@ void BattleScene(){
 	printf("\n\t\t\t\t\t\t\t    %0.f/%0.f",_npcCurrentHp,_npcHp);
 	printf("\n\n\n");
 	
+	
 	//PLAYER
-	printf("\n");
+	mapCoord.Y+=6;
+	mapCoord.X=0;
+	SetConsoleCursorPosition(hConsole, mapCoord);
 	for(i=sizeof(text1);i>-1;i--){
 		if(text1[i]=='\0'){
 			printf(" ");
@@ -86,7 +95,6 @@ void BattleScene(){
 			break;
 		}	
 	}
-
 	printf("%s", text1);
 	printf("  Lvl: 1");
 	printf("\n\t\t  HP:");
@@ -102,8 +110,8 @@ void BattleScene(){
 }
 
 void BattleDisplay(){	
-	char text3[] = {"What will                        [1] FIGHT  [2] BAG"};
-	char text4[] = {"you do?                          [3] STUDY  [4] ABSENT"};
+	char text3[] = {"What will                         [1] FIGHT    [3] BAG"};
+	char text4[] = {"you do?                           [2] STUDY    [4] ABSENT"};
 	clearScreen();
 	BattleScene();
 	selectionBox(text3, text4);
@@ -117,17 +125,9 @@ void BattleAbsent(){
 }
 void BattleEnterState(){
 	if(!_isIntro){
-		printf("\n\n\n\n\n\n\n\n\n\n\n");
-		char text1[50];
-		char text2[50] = {"approaching..."};
-		strcpy(text1, currentNpc->name);
-		strcat(text1, " is");
-		dialogBox(text1, text2);
 //		char line1[] = {""};
 //		char line2[] = {"is approaching..."};
-//		strcpy(line1, currentNpc->name);
-//		worldDialogBox(line1, line2);
-		sleep(1);
+//		worldDialogBox(currentNpc->name, line2);
 	}
 	_isIntro = true;
 }
@@ -147,12 +147,12 @@ void BattleUpdateState(){
 			break;
 		}
 		if(select=='2'){
-			_isBag = true;
+			_isStudying = true;
 			_isRootState = false;
 			break;
 		}
 		if(select=='3'){
-			_isStudying = true;
+			_isBag = true;
 			_isRootState = false;
 			break;
 		}
@@ -179,12 +179,11 @@ void BattleExitState(){
 	char text3[20] = {"and acquired "};
 	char text4[20] = {"You have level up!"};
 	int exp = currentNpc->exp;
-	int nextLvl = currentPlayer->nextLvl;
 	int talent = currentNpc->talent;
 	
 	sprintf(expText, "%d", exp);
 	sprintf(talentText, "%d", talent);
-	strcat(text1, currentNpc->name);
+	strcpy(text1, currentNpc->name);
 	strcat(text1, " has been");
 	strcat(text2,expText);
 	strcat(text2," exp");
@@ -208,23 +207,26 @@ void BattleExitState(){
 		dialogBox(text2, text3);
 		clearScreen();
 		BattleScene();
-		do{
-			int excessExp = nextLvl-exp;
-			if(excessExp>0){
-				currentPlayer->exp = excessExp;
+		currentPlayer->exp = exp;
+		while(1){
+			currentPlayer->exp = currentPlayer->nextLvl-currentPlayer->exp;
+			if(currentPlayer->exp>0){
+				break;
 			}else{
 				currentPlayer->lvl++;
-				currentPlayer->exp = (excessExp*-1);
+				currentPlayer->exp *=-1;
 				float floatNextLvl = (float)currentPlayer->nextLvl;
 				floatNextLvl *= 1.25;
 				currentPlayer->nextLvl = (int)floatNextLvl;
+				clearScreen();
+				BattleScene();
 				dialogBox(text4,"");
 				Move move = skillTree(&currentPlayer);
 				clearScreen();
 				BattleScene();
 				dialogBox("You have learned",move.name);
 			}
-		}while(currentPlayer->exp>nextLvl);
+		}
 	}
 	if(_isLose){
 		_isLose = false;
